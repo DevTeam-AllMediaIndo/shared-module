@@ -1,11 +1,10 @@
 <?php
-namespace App\Shared\AdminPermission;
+namespace Allmedia\Shared\AdminPermission;
 
-use App\Shared\InterfaceSharedView;
-use App\Shared\SystemInfo;
+use Allmedia\Shared\AdminPermission\Contracts\ShareViewInterface;
 use Throwable;
 
-class SharedViews implements InterfaceSharedView {
+class SharedViews implements ShareViewInterface {
 
     public static function render(string $filepath, array $data = []) {
         ob_start();
@@ -15,9 +14,7 @@ class SharedViews implements InterfaceSharedView {
             include __DIR__ . "/views/$filepath.php";
 
         } catch (Throwable $e) {
-            if(SystemInfo::isDevelopment()) {
-                throw $e;
-            }
+            throw $e;
         }
     }
 
@@ -27,9 +24,7 @@ class SharedViews implements InterfaceSharedView {
             include __DIR__ . "/views/$filepath.php";
 
         } catch (Throwable $e) {
-            if(SystemInfo::isDevelopment()) {
-                throw $e;
-            }
+            throw $e;
         }
     }
 }

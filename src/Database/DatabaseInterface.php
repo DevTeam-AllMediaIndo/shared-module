@@ -1,5 +1,5 @@
 <?php
-namespace App\Shared\Contracts;
+namespace Allmedia\Shared\Contracts;
 
 interface DatabaseInterface {
 

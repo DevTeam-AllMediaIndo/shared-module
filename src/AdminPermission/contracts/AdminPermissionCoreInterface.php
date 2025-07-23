@@ -1,5 +1,5 @@
 <?php
-namespace App\Shared\AdminPermission\Contracts;
+namespace Allmedia\Shared\AdminPermission\Contracts;
 
 interface AdminPermissionCoreInterface {
 

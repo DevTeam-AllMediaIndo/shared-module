@@ -1,16 +1,20 @@
 <?php
-namespace App\Shared\AdminPermission\Models;
+namespace Allmedia\Shared\AdminPermission\Models;
 
-use App\Models\DBHelper;
-use App\Shared\SystemInfo;
+use Allmedia\Shared\Contracts\DatabaseInterface;
 use Exception;
 
 class PermissionModule {
 
-    public static function findModuleById(string $id) {
+    private $db;
+
+    public function __construct(DatabaseInterface $db) {
+        $this->db = $db::connect();
+    }
+    
+    public function findModuleById(string $id) {
         try {
-            $db = DBHelper::getConnection();
-            $sqlGet = $db->query("
+            $sqlGet = $this->db->query("
                 SELECT 
                 	am.*,
                     amg.`group`
@@ -27,33 +31,23 @@ class PermissionModule {
             return $sqlGet->fetch_assoc();
 
         } catch (Exception $e) {
-            if(SystemInfo::isDevelopment()) {
-                throw $e;
-            }
-
-            return [];
+            throw $e;
         }
     }
 
-    public static function findPermissionByModuleId(int $id) {
+    public function findPermissionByModuleId(int $id) {
         try {
-            $db = DBHelper::getConnection();
-            $sqlGet = $db->query("SELECT * FROM admin_permissions WHERE module_id = {$id}");
+            $sqlGet = $this->db->query("SELECT * FROM admin_permissions WHERE module_id = {$id}");
             return $sqlGet->fetch_all(MYSQLI_ASSOC) ?? [];
 
         } catch (Exception $e) {
-            if(SystemInfo::isDevelopment()) {
-                throw $e;
-            }
-
-            return [];
+            throw $e;
         }
     }
 
-    public static function findPermissionById(int $id) {
+    public function findPermissionById(int $id) {
         try {
-            $db = DBHelper::getConnection();
-            $sqlGet = $db->query("SELECT * FROM admin_permissions WHERE id = {$id} LIMIT 1");
+            $sqlGet = $this->db->query("SELECT * FROM admin_permissions WHERE id = {$id} LIMIT 1");
             if($sqlGet->num_rows != 1) {
                 return false;
             }
@@ -61,11 +55,7 @@ class PermissionModule {
             return $sqlGet->fetch_assoc() ?? false;
 
         } catch (Exception $e) {
-            if(SystemInfo::isDevelopment()) {
-                throw $e;
-            }
-
-            return false;
+            throw $e;
         }
     }
 }

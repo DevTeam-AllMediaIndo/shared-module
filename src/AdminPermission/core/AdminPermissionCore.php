@@ -1,9 +1,9 @@
 <?php
-namespace App\Shared\AdminPermission\Core;
+namespace Allmedia\Shared\AdminPermission\Core;
 
-use App\Shared\AdminPermission\Contracts\AdminPermissionCoreInterface;
-use App\Shared\Contracts\DatabaseInterface;
-use App\Shared\Helper\UrlParser;
+use Allmedia\Shared\AdminPermission\Contracts\AdminPermissionCoreInterface;
+use Allmedia\Shared\Contracts\DatabaseInterface;
+use Allmedia\Shared\Core\UrlParser;
 use Exception;
 
 class AdminPermissionCore implements AdminPermissionCoreInterface {
@@ -104,7 +104,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
             return $result;
             
         } catch (Exception $e) {
-            return [];
+            throw $e;
         }
     }
 
@@ -192,11 +192,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
             return $result;
             
         } catch (Exception $e) {
-            if(ini_get("display_errors") == "1") {
-                throw $e;
-            }
-
-            return [];
+            throw $e;
         }
     }
 
@@ -250,14 +246,10 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
             $filepath .= UrlParser::urlToPath(explode("/", $patternReplace), "view");
             $filepath .= ".php";
 
-            return array_merge($permission, ['filepath' => $filepath]);
+            return array_merge($permission, ['filepath' => $filepath]) ?? false;
 
         } catch (Exception $e) {
-            if(ini_get("display_errors") == "1") {
-                throw $e;
-            }
-
-            return false;
+            throw $e;
         }
     }
 
@@ -286,7 +278,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
             return $result;
 
         } catch (Exception $e) {
-            return 0;
+            throw $e;
         }
     }
 
@@ -303,7 +295,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
             return $sqlGet->fetch_all(MYSQLI_ASSOC) ?? [];
 
         } catch (Exception $e) {
-            return [];
+            throw $e;
         }
     }
 }
