@@ -100,7 +100,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
             }
             
             /** set permission to session */
-            $_SESSION[ self::$sessionPermissionName ] = $result;
+            $_SESSION[ $this->sessionPermissionName ] = $result;
             return $result;
             
         } catch (Exception $e) {
@@ -256,7 +256,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
     public function isHavePermission(int $module_id, string $permissionCode): array|bool {
         try {
             global $_SESSION;
-            $sessionAuthorization = $_SESSION[ self::$sessionPermissionName ];
+            $sessionAuthorization = $_SESSION[ $this->sessionPermissionName ];
             if(empty($sessionAuthorization)) {
                 return false;
             }
