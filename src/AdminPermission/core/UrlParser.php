@@ -1,5 +1,5 @@
 <?php
-namespace Allmedia\Shared\Core;
+namespace Allmedia\Shared\AdminPermission\Core;
 
 class UrlParser {
 

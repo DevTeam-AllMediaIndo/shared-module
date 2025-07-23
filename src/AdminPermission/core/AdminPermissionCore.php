@@ -3,7 +3,7 @@ namespace Allmedia\Shared\AdminPermission\Core;
 
 use Allmedia\Shared\AdminPermission\Contracts\AdminPermissionCoreInterface;
 use Allmedia\Shared\Database\DatabaseInterface;
-use Allmedia\Shared\Core\UrlParser;
+use Allmedia\Shared\AdminPermission\Core\UrlParser;
 use Exception;
 
 class AdminPermissionCore implements AdminPermissionCoreInterface {
