@@ -2,7 +2,7 @@
 namespace Allmedia\Shared\AdminPermission\Core;
 
 use Allmedia\Shared\AdminPermission\Contracts\AdminPermissionCoreInterface;
-use Allmedia\Shared\Contracts\DatabaseInterface;
+use Allmedia\Shared\Database\DatabaseInterface;
 use Allmedia\Shared\Core\UrlParser;
 use Exception;
 

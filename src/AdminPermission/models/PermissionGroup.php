@@ -1,7 +1,7 @@
 <?php
 namespace Allmedia\Shared\AdminPermission\Models;
 
-use Allmedia\Shared\Contracts\DatabaseInterface;
+use Allmedia\Shared\Database\DatabaseInterface;
 use Exception;
 
 class PermissionGroup {
