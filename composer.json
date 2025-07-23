@@ -1,0 +1,11 @@
+{
+    "name": "nerofann/shared-module",
+    "description": "Fast setup website with shared-module",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "App\\Shared\\": "src/"
+        }
+    },
+    "require": {}
+}
