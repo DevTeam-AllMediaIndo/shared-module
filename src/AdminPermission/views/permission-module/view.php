@@ -38,3 +38,6 @@
         </script>
     </div>
 </div>
+
+<?php require_once __DIR__ . "/update_button.php" ?>
+<?php require_once __DIR__ . "/delete.php" ?>
