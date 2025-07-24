@@ -270,7 +270,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
 
                 $permissionIndex = array_search($permissionCode, array_column($group['modules'][$moduleIndex]['permission'], "code"));
                 if($permissionIndex !== FALSE) {
-                    $result = $group['modules'][$moduleIndex]['permission'][$permissionIndex]['status'];
+                    $result = $group['modules'][$moduleIndex]['permission'][$permissionIndex];
                     break;
                 }
             }
