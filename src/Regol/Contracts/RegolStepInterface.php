@@ -3,10 +3,10 @@ namespace Allmedia\Shared\Regol\Contracts;
 
 interface RegolStepInterface {
 
-    public function handle(array $request): void;
+    public function __construct();
 
-    public function validate(array $request): array|string;
+    public function validate(): bool;
 
-    public function view(): void;
+    public function view();
 
 }
