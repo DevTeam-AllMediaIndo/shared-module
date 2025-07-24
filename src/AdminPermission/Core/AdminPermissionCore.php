@@ -275,7 +275,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                 }
             }
 
-            return $result;
+            return ($result['status'])? $result : false;
 
         } catch (Exception $e) {
             throw $e;
