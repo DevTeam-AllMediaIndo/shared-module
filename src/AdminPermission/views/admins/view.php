@@ -49,4 +49,5 @@
 </script>
 
 <?php require_once __DIR__ . "/update_button.php"; ?>
+<?php require_once __DIR__ . "/delete_button.php"; ?>
 <?php require_once __DIR__ . "/permission_button.php"; ?>
