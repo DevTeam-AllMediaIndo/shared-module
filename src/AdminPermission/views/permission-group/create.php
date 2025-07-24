@@ -1,7 +1,7 @@
 <?php if($isAllowToCreate) : ?>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title text-priamry">Buat Grup</h5>
+            <h5 class="card-title text-priamry">Buat Grup 1</h5>
         </div>
         <div class="card-body">
             <form action="" method="post" id="form-post-group">
