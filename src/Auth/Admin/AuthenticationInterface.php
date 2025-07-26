@@ -1,5 +1,5 @@
 <?php
-namespace Allmedia\Share\Auth\Admin;
+namespace Allmedia\Shared\Auth\Admin;
 
 interface AuthenticationInterface {
 
@@ -23,5 +23,11 @@ interface AuthenticationInterface {
      * @return array|bool
      */
     public function authentication(): array|bool;
+
+    /**
+     * Summary of logout
+     * @return bool
+     */
+    public function logout(): bool;
 
 }
