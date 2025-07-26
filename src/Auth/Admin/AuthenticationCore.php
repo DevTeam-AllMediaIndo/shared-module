@@ -5,7 +5,13 @@ use Allmedia\Share\Auth\Admin\AuthenticationInterface;
 use Allmedia\Shared\Database\DatabaseInterface;
 use Exception;
 
-class AuthenticationCore extends AuthenticationConfig implements AuthenticationInterface {
+class AuthenticationCore implements AuthenticationInterface {
+    
+    protected $db;
+    protected $table = "tb_admin";
+    protected $tokenColumn = "ADM_TOKEN";
+    protected $tokenExpiredColumn = "ADM_TOKEN_EXPIRED";
+    public string $sessionAuthName = "app_crm_token";
     
     public function __construct(?DatabaseInterface $databaseInterface) {
         $this->db = $databaseInterface::connect();
@@ -63,5 +69,15 @@ class AuthenticationCore extends AuthenticationConfig implements AuthenticationI
         }
 
         return $user;
+    }
+
+    public function logout(): bool {
+        global $_SESSION, $_COOKIE;
+        $_SESSION[ self::$sessionAuthName ] = "";
+        $_COOKIE[ self::$sessionAuthName ] = "";
+
+        session_destroy();
+        setcookie( $this->sessionAuthName,"", time());
+        return true;
     }
 }
