@@ -1,17 +1,11 @@
 <?php
 namespace Allmedia\Shared\Auth\Admin;
 
-use Allmedia\Share\Auth\Admin\AuthenticationInterface;
+use Allmedia\Shared\Auth\Admin\AuthenticationInterface;
 use Allmedia\Shared\Database\DatabaseInterface;
 use Exception;
 
-class AuthenticationCore implements AuthenticationInterface {
-    
-    protected $db;
-    protected $table = "tb_admin";
-    protected $tokenColumn = "ADM_TOKEN";
-    protected $tokenExpiredColumn = "ADM_TOKEN_EXPIRED";
-    public string $sessionAuthName = "app_crm_token";
+class AuthenticationCore extends AuthenticationConfig implements AuthenticationInterface {
     
     public function __construct(?DatabaseInterface $databaseInterface) {
         $this->db = $databaseInterface::connect();
