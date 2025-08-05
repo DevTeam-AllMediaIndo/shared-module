@@ -12,18 +12,12 @@ class StepAccountType implements RegolStepInterface {
 
     public function __construct(array $data) {
         $this->data = [
-            'fullname' => ($data['fullname'] ??= ""),
-            'email' => ($data['email'] ??= ""),
-            'phone' => ($data['phone'] ??= ""),
-            'date_create_demo' => ($data['date_create_demo'] ??= ""),
             'demo' => [],
-        ];
-
-        $this->data['demo'] = [
-            'login' => $data['demo']['login'] ??= "",
-            'master' => $data['demo']['master'] ??= "",
-            'investor' => $data['demo']['investor'] ??= "",
-            'phone' => $data['demo']['phone'] ??= "",
+            'categories' => [],
+            'products' => [],
+            'account' => [
+                'category' => $data['account']['category'] ?? "",
+            ],
         ];
     }
 
