@@ -4,11 +4,10 @@ namespace Allmedia\Shared\Metatrader;
 class ApiManager {
 
     protected string $endpoint = "http://45.76.163.26:5001";
-    protected string $server;
     protected string $tokenManager;
 
-    public function __construct(string $server) {
-        $this->server = $server;
+    public function __construct(string $tokenManager) {
+        $this->tokenManager = $tokenManager;
     }
 
     public function request(string $command, array $data = []) {
@@ -63,28 +62,6 @@ class ApiManager {
             'error'     => "",
             'message'   => $resp->message
         ];
-    }
-
-    public function connect(array $data): string|bool {
-        $required = ["login", "password"];
-        foreach($required as $req) {
-            if(empty($data[ $req ])) {
-                return false;
-            }
-        }
-
-        $apiData = [
-            'mtlogin' => $data['login'],
-            'mtPassw' => $data['password'],
-            'mtServr' => $this->server
-        ];
-
-        $connect = $this->request("Connect", $apiData);
-        if(!$connect->success) {
-            return false;
-        }
-
-        return $connect->message;
     }
 
     public function createAccount(array $data): array|int {
