@@ -1,13 +1,22 @@
 <?php
 namespace Allmedia\Shared\Verihubs;
 
-use App\Models\DBHelper;
+use Allmedia\Shared\Database\DatabaseInterface;
 use Imagick;
 use Exception;
 
 class Verihubs {
+    
+    private $db;
 
-    public static function phoneValidation(string $phoneCode, int $phone): bool|string|int {
+    public function __construct(DatabaseInterface $db)
+    {
+        //Do your magic here
+        $this->db = $db->connect();
+    }
+    
+
+    public function phoneValidation(string $phoneCode, int $phone): bool|string|int {
         $phone = preg_replace('/[^\d]/', '', $phone);
 
         /** JJika diawali 0, buang 0 dan tambahkan kode negara */
@@ -28,10 +37,9 @@ class Verihubs {
         return $phone;
     }
     
-    protected static function getCredential(): array {
+    protected function getCredential(): array {
         try {
-            global $db;
-            $sqlGet = $db->query("SELECT * FROM tb_verihub WHERE VERIHUB_STS = -1");
+            $sqlGet = $this->db->query("SELECT * FROM tb_verihub WHERE VERIHUB_STS = -1");
             if($sqlGet->num_rows != 1) {
                 return [];
             }
@@ -50,7 +58,7 @@ class Verihubs {
         }
     }
 
-    protected static function request(string $url, array $data = [], array $header = []) {
+    protected function request(string $url, array $data = [], array $header = []) {
         try {
             $curl = curl_init();
             curl_setopt_array($curl, [
@@ -111,7 +119,7 @@ class Verihubs {
         }
     } 
     
-    public static function sendOtp_sms(array $data = []):array  {
+    public function sendOtp_sms(array $data = []):array  {
         try {
             foreach(['phone', 'otp'] as $required) {
                 if(empty($data[ $required ])) {
@@ -135,7 +143,7 @@ class Verihubs {
             }
 
             /** Get Credential */
-            $credential = self::getCredential();
+            $credential = $this->getCredential();
             if(empty($credential)) {
                 return [
                     'success'   => false,
@@ -171,10 +179,10 @@ class Verihubs {
                 'otp' => $data['otp']
             ];
 
-            $request = self::request($endpoint, $requestData, $header);
+            $request = $this->request($endpoint, $requestData, $header);
             
             /** Logging */
-            self::logger($data['phone'], [
+            $this->logger($data['phone'], [
                 'endpoint' => $endpoint,
                 'module' => "/v1/otp/send",
                 'message' => $request['message'],
@@ -206,10 +214,9 @@ class Verihubs {
         }
     }
 
-    public static function validate_otp_sms($phone, $otp): bool|string {
+    public function validate_otp_sms($phone, $otp): bool|string {
         /** Validate Phone Number */
-        $db = DBHelper::getConnection();
-        $sqlCheckOtp = $db->query("SELECT LOGVER_DATA, LOGVER_DATETIME FROM tb_log_verihub WHERE LOGVER_MBR = {$phone} AND LOGVER_MODULE = '/v1/otp/send' ORDER BY ID_LOGVER DESC LIMIT 1");
+        $sqlCheckOtp = $this->db->query("SELECT LOGVER_DATA, LOGVER_DATETIME FROM tb_log_verihub WHERE LOGVER_MBR = {$phone} AND LOGVER_MODULE = '/v1/otp/send' ORDER BY ID_LOGVER DESC LIMIT 1");
         if($sqlCheckOtp->num_rows != 1) {
             return false;
         }
@@ -231,7 +238,7 @@ class Verihubs {
         return true;
     }
 
-    public static function sendOtp_sms_verification(array $data = []): array {
+    public function sendOtp_sms_verification(array $data = []): array {
         try {
             foreach(['phone', 'otp'] as $required) {
                 if(empty($data[ $required ])) {
@@ -256,7 +263,7 @@ class Verihubs {
             }
 
             /** Get Credential */
-            $credential = self::getCredential();
+            $credential = $this->getCredential();
             if(empty($credential)) {
                 return [
                     'success'   => false,
@@ -278,10 +285,10 @@ class Verihubs {
                 'otp' => $data['otp']
             ];
 
-            $request = self::request($endpoint, $requestData, $header);
+            $request = $this->request($endpoint, $requestData, $header);
             
             /** Logging */
-            self::logger($data['mbrid'], [
+            $this->logger($data['mbrid'], [
                 'endpoint' => $endpoint,
                 'module' => "/v1/otp/verify",
                 'message' => $request['message'],
@@ -320,7 +327,7 @@ class Verihubs {
         }
     }
 
-    public static function send_idVerification(array $data): array {
+    public function send_idVerification(array $data): array {
         try {
             foreach(['mbrid', 'nik', 'name', 'birth_date', 'email', 'phone', 'selfie_photo', 'ktp_photo', 'reference_id'] as $required) {
                 if(empty($data[ $required ])) {
@@ -341,7 +348,7 @@ class Verihubs {
             }
 
             /** Get Credential */
-            $credential = self::getCredential();
+            $credential = $this->getCredential();
             if(empty($credential)) {
                 return [
                     'success'   => false,
@@ -359,7 +366,7 @@ class Verihubs {
                 "App-ID: ".$credential['appID'],
             ];
 
-            $request = self::request($endpoint, $data, $header);
+            $request = $this->request($endpoint, $data, $header);
             if($request['code'] != 200) {
                 $message = $request['message'];
                 if(!empty($request['error'])) {
@@ -375,7 +382,7 @@ class Verihubs {
             }
 
             /** Logging */
-            self::logger($data['mbrid'], [
+            $this->logger($data['mbrid'], [
                 'endpoint' => $endpoint,
                 'module' => "/data-verification/certificate-electronic/verify",
                 'message' => $request['message'],
@@ -395,7 +402,7 @@ class Verihubs {
         }
     }
 
-    public static function getFileSize(string $bytes, string $format = "b") {
+    public function getFileSize(string $bytes, string $format = "b") {
         try {
             $format = strtoupper($format);
             switch($format) {
@@ -412,7 +419,7 @@ class Verihubs {
         }
     }
 
-    public static function validate_photoSelfie(array $filePost): string | array {
+    public function validate_photoSelfie(array $filePost): string | array {
         try {
             if(empty($filePost['tmp_name'])) {
                 return "Invalid file path";
@@ -461,7 +468,7 @@ class Verihubs {
         }
     }
 
-    public static function validate_photoKtp(array $filePost): string | array {
+    public function validate_photoKtp(array $filePost): string | array {
         try {
             if(empty($filePost['tmp_name'])) {
                 return "Invalid file path (KTP Photo)";
@@ -530,7 +537,7 @@ class Verihubs {
         }
     }
 
-    public static function detectFaceLiveness(array $data = []) {
+    public function detectFaceLiveness(array $data = []) {
         if(empty($data['mbrid'])) {
             return [
                 'success'   => false,
@@ -548,7 +555,7 @@ class Verihubs {
         }
 
         /** Get Credential */
-        $credential = self::getCredential();
+        $credential = $this->getCredential();
         if(empty($credential)) {
             return [
                 'success'   => false,
@@ -574,10 +581,10 @@ class Verihubs {
         ];
 
         /** Send Request */
-        $request = self::request($endpoint, $requestData, $header);
+        $request = $this->request($endpoint, $requestData, $header);
 
         /** Logging */
-        self::logger($data['mbrid'], [
+        $this->logger($data['mbrid'], [
             'endpoint' => $endpoint,
             'module' => "/v1/face/liveness",
             'message' => $request['message'],
@@ -589,9 +596,9 @@ class Verihubs {
         return $request;
     }
 
-    public static function logger(int $mbrid, array $data = []) {
+    public function logger(int $mbrid, array $data = []) {
         try {
-            DBHelper::insert("tb_log_verihub", [
+            $this->db->insert("tb_log_verihub", [
                 'LOGVER_MBR' => $mbrid,
                 'LOGVER_ENDPOINT' => $data['endpoint'] ?? "-",
                 'LOGVER_MODULE' => $data['module'] ?? "-",
