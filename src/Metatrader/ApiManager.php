@@ -80,4 +80,29 @@ class ApiManager {
         return $request->message;
     }
 
+    public function deposit(array $data): array|int {
+        $required = ["login", "amount", "comment"];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return -1;
+            }
+        }
+
+        if(is_numeric($data['login']) === FALSE && $data['login'] <= 0) {
+            return -1;
+        }
+
+        if(is_numeric($data['amount']) === FALSE && $data['amount'] <= 0) {
+            return -1;
+        }
+
+        $data['id'] = $this->tokenManager;
+        $request = $this->request("Deposit", $data);
+        if(!$request->success) {
+            return 0;
+        }     
+
+        return $request->message;
+    }
+
 }
