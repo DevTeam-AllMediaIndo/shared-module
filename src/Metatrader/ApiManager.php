@@ -72,6 +72,7 @@ class ApiManager {
             }
         }
 
+        $data['id'] = $this->tokenManager;
         $request = $this->request("AccountCreate", $data);
         if(!$request->success) {
             return 0;
