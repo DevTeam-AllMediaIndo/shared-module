@@ -12,7 +12,7 @@ class Verihubs {
     public function __construct(DatabaseInterface $db)
     {
         //Do your magic here
-        $this->db = $db->connect();
+        $this->db = $db;
     }
     
 
@@ -39,7 +39,7 @@ class Verihubs {
     
     protected function getCredential(): array {
         try {
-            $sqlGet = $this->db->query("SELECT * FROM tb_verihub WHERE VERIHUB_STS = -1");
+            $sqlGet = $this->db->connect()->query("SELECT * FROM tb_verihub WHERE VERIHUB_STS = -1");
             if($sqlGet->num_rows != 1) {
                 return [];
             }
@@ -216,7 +216,7 @@ class Verihubs {
 
     public function validate_otp_sms($phone, $otp): bool|string {
         /** Validate Phone Number */
-        $sqlCheckOtp = $this->db->query("SELECT LOGVER_DATA, LOGVER_DATETIME FROM tb_log_verihub WHERE LOGVER_MBR = {$phone} AND LOGVER_MODULE = '/v1/otp/send' ORDER BY ID_LOGVER DESC LIMIT 1");
+        $sqlCheckOtp = $this->db->connect()->query("SELECT LOGVER_DATA, LOGVER_DATETIME FROM tb_log_verihub WHERE LOGVER_MBR = {$phone} AND LOGVER_MODULE = '/v1/otp/send' ORDER BY ID_LOGVER DESC LIMIT 1");
         if($sqlCheckOtp->num_rows != 1) {
             return false;
         }
