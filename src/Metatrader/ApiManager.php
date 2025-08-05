@@ -3,7 +3,7 @@ namespace Allmedia\Shared\Metatrader;
 
 class ApiManager {
 
-    protected string $endpoint = "http://45.76.163.26:5001";
+    protected string $endpoint = "http://45.76.163.26:5000";
     protected string $tokenManager;
 
     public function __construct(string $tokenManager) {
