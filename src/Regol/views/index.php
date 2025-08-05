@@ -8,7 +8,7 @@
                         <?php $i = $key + 1; ?>
                         <li class="step-wizard-item">
                             <span class="progress-count">
-                                <button type="button" onclick="location.href = `{$pageLink}`" class="btn btn-sm text-dark btn-outline-primary" id="tab1" aria-selected="false" title="test">
+                                <button type="button" onclick="location.href = `/account/create?page=<?= $step->pageView; ?>`" class="btn btn-sm text-dark btn-outline-primary" id="tab1" aria-selected="false" title="test">
                                     <?= $i ?>
                                 </button>
                             </span>
