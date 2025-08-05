@@ -90,7 +90,7 @@
             })
             
             let object = Object.fromEntries(new FormData(this).entries())
-            $.post("/ajax/regol/createDemo", object, function(resp) {
+            $.post("/ajax/post/account/regol/create-demo", object, function(resp) {
                 if(!resp.success) {
                     Swal.fire("Failed", resp.error, "error");
                     return false;
