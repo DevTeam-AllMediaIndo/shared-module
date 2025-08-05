@@ -35,7 +35,7 @@ class StepAccountType implements RegolStepInterface {
         try {
             ob_start();
             extract($this->data, EXTR_SKIP);
-            require_once __DIR__ . "/../views/pembuatan-demo.php";
+            require_once __DIR__ . "/../views/{$this->pageView}.php";
             return ob_get_clean();
 
         } catch (Exception $e) {
