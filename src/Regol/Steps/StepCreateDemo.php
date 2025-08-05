@@ -12,8 +12,8 @@ class StepCreateDemo implements RegolStepInterface {
 
     public function __construct(array $data) {
         $this->data = [
-            'pagePrev' => $data['pageNext'] ?? "javascript:void(0)",
-            'pageNext' => $data['pagePrev'] ?? "javascript:void(0)",
+            'pagePrev' => $data['pagePrev'] ?? "javascript:void(0)",
+            'pageNext' => $data['pageNext'] ?? "javascript:void(0)",
             'fullname' => ($data['fullname'] ??= ""),
             'email' => ($data['email'] ??= ""),
             'phone' => ($data['phone'] ??= ""),
