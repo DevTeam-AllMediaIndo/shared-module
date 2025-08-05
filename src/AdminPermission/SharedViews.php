@@ -7,10 +7,8 @@ use Throwable;
 class SharedViews implements ShareViewInterface {
 
     public static function render(string $filepath, array $data = []) {
-        ob_start();
-        extract($data, EXTR_SKIP);
-
         try {
+            extract($data, EXTR_SKIP);
             include __DIR__ . "/views/$filepath.php";
 
         } catch (Throwable $e) {

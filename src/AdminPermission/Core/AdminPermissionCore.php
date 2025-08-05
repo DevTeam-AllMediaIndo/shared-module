@@ -275,7 +275,9 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                 }
             }
 
-            return ($result['status'])? $result : false;
+            return (is_array($result) && array_key_exists("status", $result) && $result['status'])
+                ? $result 
+                : false;
 
         } catch (Exception $e) {
             throw $e;
