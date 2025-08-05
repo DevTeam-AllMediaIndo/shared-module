@@ -68,7 +68,7 @@
             <?php else : ?>
                 <div class="panel-footer">
                     <div class="text-end mt-25">
-                        <a href="<?= ($nextPage['page'])? ("/create-acc/".$nextPage['page']) : "javascript:void(0)"; ?>" class="btn btn-primary">Berikutnya</a>
+                        <a href="/account/create?page=<?= $pageNext ?>" class="btn btn-primary">Berikutnya</a>
                     </div>
                 </div>
             <?php endif; ?>
