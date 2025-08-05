@@ -64,7 +64,7 @@ class ApiManager {
         ];
     }
 
-    public function createAccount(array $data): array|int {
+    public function createAccount(array $data): object|int {
         $required = ["master_pass", "investor_pass", "group", "fullname", "email", "leverage", "comment"];
         foreach($required as $req) {
             if(empty($data[ $req ])) {
@@ -80,7 +80,7 @@ class ApiManager {
         return $request->message;
     }
 
-    public function deposit(array $data): array|int {
+    public function deposit(array $data): object|int {
         $required = ["login", "amount", "comment"];
         foreach($required as $req) {
             if(empty($data[ $req ])) {
