@@ -12,13 +12,13 @@ class StepAccountType implements RegolStepInterface {
 
     public function __construct(array $data) {
         $this->data = [
-            'demo' => [],
-            'categories' => [],
-            'products' => [],
-            'account' => [
-                'category' => $data['account']['category'] ?? "",
-            ],
+            'demo_login' => $data['demo_login'] ?? 0,
+            'real_category' => $data['real_category'] ?? "-",
+            'real_rtype' => $data['real_rtype'],
+            'categories' => $data['categories'] ?? [],
         ];
+
+        $this->data['pagePrev'] = $data['pagePrev'] ?? "javascript:void(0)";
     }
 
     public function validate(): bool {
