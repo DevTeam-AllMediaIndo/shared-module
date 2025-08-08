@@ -33,9 +33,9 @@ class ApiTerminal {
         $error = str_replace("45.76.163.26", "**.**.***.**", $error);
         if(!empty($error)) {
             return (object) [
-                'success'   => false,
-                'error'     => $error ?? "Error Response",
-                'message'   => ""
+                'success' => false,
+                'message' => $error ?? "Error Response",
+                'data' => []
             ];
         }
 
@@ -87,20 +87,12 @@ class ApiTerminal {
                 return false;
             }
         }
-        
-        if ($required !== TRUE) {
-            return (object) [
-                'success'   => false,
-                'error'     => $required ?? "Parameter tidak lengkap",
-                'message'   => []
-            ];
-        }
 
         $config = [
             'id' => $data['id'],
             'symbol' => $data['symbol'],
-            'from' => $data['date_from'],
-            'to' => $data['date_to'],
+            'date_From' => $data['date_from'],
+            'date_To' => $data['date_to'],
         ];
 
         if(!empty($data['timeframe'])) {
@@ -110,26 +102,68 @@ class ApiTerminal {
         $prices = $this->request("PriceHistory", $config);
         if(!is_object($prices)) {
             return (object) [
-                'success'   => false,
-                'error'     => $resp->message ?? "Invalid Object",
-                'message'   => ""
+                'success' => true,
+                'message' => $resp->message ?? "Invalid Object",
+                'data' => []
             ];
         }
 
         if(is_object($prices->message) && property_exists($prices->message, "status")) {
             if ($prices->message->status != "success") {
                 return (object) [
-                    'success'   => false,
-                    'error'     => $prices->message->message,
-                    'message'   => ""
+                    'success' => true,
+                    'message' => $resp->message ?? "Invalid Message",
+                    'data' => []
                 ];
             }
         }
 
         return (object) [
             'success' => true,
-            'm message' => "",
+            'message' => "",
             'data' => $prices->message
+        ];
+    }
+
+    public function symbols(array $data): object|bool {
+        $required = ['id'];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return false;
+            }
+        }
+
+        $apiData = [
+            'id' => $data['id']
+        ];
+
+        if(!empty($data['group'])) {
+            $apiData['group'] = $data['group'];
+        }
+
+        $symbols = $this->request("Symbols", $apiData);
+        if(!is_object($symbols)) {
+            return (object) [
+                'success' => true,
+                'message' => $symbols->message ?? "Invalid Object",
+                'data' => $symbols->message
+            ];
+        }
+
+        if(is_object($symbols->message) && property_exists($symbols->message, "status")) {
+            if ($symbols->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $symbols->message ?? "Invalid data",
+                    'data' => []
+                ];
+            }
+        }
+
+        return (object) [
+            'success' => true,
+            'message' => "Berhasil",
+            'data' => $symbols->message
         ];
     }
 
