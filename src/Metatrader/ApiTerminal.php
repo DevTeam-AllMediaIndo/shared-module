@@ -86,5 +86,55 @@ class ApiTerminal {
         return $connect->message;
     }
 
+    public function priceHistory(array $data) {
+        $required = ['id', 'symbol', 'date_from', 'date_to'];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return false;
+            }
+        }
+        
+        if ($required !== TRUE) {
+            return (object) [
+                'success'   => false,
+                'error'     => $required ?? "Parameter tidak lengkap",
+                'message'   => []
+            ];
+        }
+
+        $config = [
+            'id' => $data['id'],
+            'symbol' => $data['symbol'],
+            'from' => $data['date_from'],
+            'to' => $data['date_to'],
+        ];
+
+        if(!empty($data['timeframe'])) {
+            $config['timeframe'] = $data['timeframe'];
+        }
+
+        $prices = $this->request("PriceHistory", $config);
+        if (!is_object($prices) || !property_exists($prices, 'success')) {
+            return (object) [
+                'success'   => false,
+                'error'     => $prices->error ?? "Invalid Result",
+                'message'   => []
+            ];
+        }
+
+        if (!$prices->success) {
+            return (object) [
+                'success'   => false,
+                'error'     => $prices->error ?? "Invalid Status",
+                'message'   => []
+            ];
+        }
+
+        return (object) [
+            'success'   => true,
+            'error'     => "",
+            'message'   => json_decode($prices->message)
+        ];
+    }
 
 }
