@@ -10,7 +10,7 @@ class ApiTerminal {
         $this->server = $server;
     }
 
-    public function request(string $command, array $data = []) {
+    public function request(string $command, array $data = []): object {
         $curl   = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "{$this->endpoint}/{$command}?".http_build_query($data),
@@ -86,8 +86,5 @@ class ApiTerminal {
         return $connect->message;
     }
 
-    public function createAccount(array $data) {
-
-    }
 
 }
