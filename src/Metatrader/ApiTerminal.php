@@ -10,7 +10,7 @@ class ApiTerminal {
         $this->server = $server;
     }
 
-    public function request(string $command, array $data = []): object {
+    public function request(string $command, array $data = []) {
         $curl   = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "{$this->endpoint}/{$command}?".http_build_query($data),
@@ -39,29 +39,23 @@ class ApiTerminal {
             ];
         }
 
-        if(!is_object($resp) || $status != "success") {
-            return (object) [
-                'success'   => false,
-                'error'     => $resp->message ?? "Invalid Object",
-                'message'   => ""
-            ];
+        return $resp;
+    }
+
+    private function isValidToken($token = ""): bool {
+        if (!is_string($token)) {
+            return false;
         }
 
-        if(is_object($resp->message) && property_exists($resp->message, "status")) {
-            if ($resp->message->status != "success") {
-                return (object) [
-                    'success'   => false,
-                    'error'     => $resp->message->message,
-                    'message'   => ""
-                ];
-            }
+        if (strlen($token) < 32) {
+            return false;
         }
 
-        return (object) [
-            'success'   => true,
-            'error'     => "",
-            'message'   => $resp->message
-        ];
+        if (!(strpos("-", $token) === FALSE)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function connect(array $data): string|bool {
@@ -79,14 +73,14 @@ class ApiTerminal {
         ];
 
         $connect = $this->request("Connect", $apiData);
-        if(!$connect->success) {
+        if(!$this->isValidToken($connect)) {
             return false;
         }
 
-        return $connect->message;
+        return $connect;
     }
 
-    public function priceHistory(array $data) {
+    public function priceHistory(array $data): object|bool {
         $required = ['id', 'symbol', 'date_from', 'date_to'];
         foreach($required as $req) {
             if(empty($data[ $req ])) {
@@ -114,26 +108,28 @@ class ApiTerminal {
         }
 
         $prices = $this->request("PriceHistory", $config);
-        if (!is_object($prices) || !property_exists($prices, 'success')) {
+        if(!is_object($prices)) {
             return (object) [
                 'success'   => false,
-                'error'     => $prices->error ?? "Invalid Result",
-                'message'   => []
+                'error'     => $resp->message ?? "Invalid Object",
+                'message'   => ""
             ];
         }
 
-        if (!$prices->success) {
-            return (object) [
-                'success'   => false,
-                'error'     => $prices->error ?? "Invalid Status",
-                'message'   => []
-            ];
+        if(is_object($prices->message) && property_exists($prices->message, "status")) {
+            if ($prices->message->status != "success") {
+                return (object) [
+                    'success'   => false,
+                    'error'     => $prices->message->message,
+                    'message'   => ""
+                ];
+            }
         }
 
         return (object) [
-            'success'   => true,
-            'error'     => "",
-            'message'   => json_decode($prices->message)
+            'success' => true,
+            'm message' => "",
+            'data' => $prices->message
         ];
     }
 
