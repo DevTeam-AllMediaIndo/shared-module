@@ -1,6 +1,9 @@
 <?php
 namespace Allmedia\Shared\Metatrader;
 
+define("CHANGE_MASTER_PASSWORD", 0);
+define("CHANGE_INVESTOR_PASSWORD", 1);
+
 class ApiManager {
 
     protected string $endpoint = "http://45.76.163.26:5000";
@@ -104,6 +107,38 @@ class ApiManager {
         }     
 
         return $request->message;
+    }
+
+    public function changePassword(array $data): object|int {
+        $required = ["login", "password"];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return -1;
+            }
+        }
+
+        $data['password_type'] = !empty($data['password_type'])? $data['password_type'] : CHANGE_MASTER_PASSWORD;
+        if(is_numeric($data['password_type']) === FALSE) {
+            return -1;
+        }
+
+        if(is_numeric($data['login']) === FALSE && $data['login'] <= 0) {
+            return -1;
+        }
+
+        $data['id'] = $this->tokenManager;
+        $request = $this->request("ChangePassword", $data);
+        if(!$request->success) {
+            return 0;
+        }
+
+        return (object) [
+            'success' => true,
+            'message' => "Success",
+            'data' => [
+                'password' => $request->message
+            ]
+        ];
     }
 
 }
