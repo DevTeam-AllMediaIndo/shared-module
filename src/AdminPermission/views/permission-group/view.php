@@ -1,7 +1,6 @@
 <div class="row">
-    <div class="col-md-4 mb-3">
-        <?php require_once __DIR__ . "/create.php"; ?>
-    </div>
+    <?php require_once __DIR__ . "/create.php"; ?>
+    
     <div class="col mb-3">
         <div class="card">
             <div class="card-header">
