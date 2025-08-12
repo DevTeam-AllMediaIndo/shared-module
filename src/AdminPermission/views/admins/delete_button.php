@@ -1,4 +1,4 @@
-<?php if($isAllowToUpdate) : ?>
+<?php if($isAllowToDelete) : ?>
     <script type="text/javascript">
         $(document).ready(function() {
             if(table) {

@@ -1,4 +1,4 @@
-<?php if($isAllowToUpdate) : ?>
+<?php if($isAllowToUpdatePermission) : ?>
     <script type="text/javascript">
         $(document).ready(function() {
             if(table) {
