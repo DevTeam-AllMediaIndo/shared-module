@@ -1,6 +1,7 @@
 <?php
 namespace Allmedia\Shared\Metatrader;
 
+use Allmedia\Shared\SystemInfo;
 use Exception;
 
 class ApiTerminal {
@@ -315,6 +316,43 @@ class ApiTerminal {
             return (object) [
                 'success' => false,
                 'message' => "Internal Server Error (500)",
+                'data' => []
+            ];
+        }
+    }
+
+    public function accountSummary(array $data): object {
+        try {
+            $required = ["id"];
+            foreach($required as $req) {
+                if(empty($data[ $req ])) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "{$req} is required",
+                        'data' => []
+                    ];
+                }
+            }
+
+            $accountSummary = $this->request("AccountSummary", ['id' => $data['id']]);
+            if(!is_object($accountSummary) || $accountSummary->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $accountSummary->message ?? "Invalid Object",
+                    'data' => []
+                ];
+            }
+
+            return (object) [
+                'success' => true,
+                'message' => "Successfull",
+                'data' => $accountSummary->message
+            ];
+
+        } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'message' => (SystemInfo::isDevelopment())? $e->getMessage() : "Internal Server Error",
                 'data' => []
             ];
         }
