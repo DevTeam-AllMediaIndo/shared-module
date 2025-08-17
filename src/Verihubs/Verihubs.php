@@ -105,7 +105,7 @@ class Verihubs {
             return [
                 'success'   => true,
                 'message'   => $resp['message'] ?? "Request Successfull",
-                'data'      => [],
+                'data'      => $resp['data'] ?? [],
                 'code'      => $httpCode
             ];
 
@@ -377,6 +377,30 @@ class Verihubs {
                 return [
                     'success'   => false,
                     'message'   => "{$message}",
+                    'data'      => [],
+                ];
+            }
+
+            if(empty($request['data'])) {
+                return [
+                    'success'   => false,
+                    'message'   => "Invalid Data",
+                    'data'      => [],
+                ];
+            }
+
+            if(empty($request['data']['status'])) {
+                return [
+                    'success'   => false,
+                    'message'   => "Invalid Status",
+                    'data'      => [],
+                ];
+            }
+
+            if(strtolower($request['data']['status']) != "verified") {
+                return [
+                    'success'   => false,
+                    'message'   => (empty($request['data']['reject_field']))? "Invalid Error Status" : ("Invalid ".implode(", ", $request['data']['reject_field'])),
                     'data'      => [],
                 ];
             }
