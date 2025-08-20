@@ -51,7 +51,7 @@ class AuthenticationCore extends AuthenticationConfig implements AuthenticationI
 
         /** Validasi Token */
         $token = $authData['token'] ?? "";
-        $sqlCheck = $this->db->query("SELECT * FROM tb_admin WHERE {$this->tokenColumn} = '{$token}' LIMIT 1");
+        $sqlCheck = $this->db->query("SELECT * FROM tb_admin JOIN tb_admin_role tar ON (tar.ID_ADMROLE = ADM_LEVEL) WHERE {$this->tokenColumn} = '{$token}' LIMIT 1");
         $user = $sqlCheck->fetch_assoc(); 
         if($sqlCheck->num_rows != 1) {
             return false;
