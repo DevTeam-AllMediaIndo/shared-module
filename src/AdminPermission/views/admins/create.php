@@ -86,7 +86,7 @@ if(!$isAllowToCreate) {
                 button.removeClass('loading');
                 Swal.fire(resp.alert).then(() => {
                     if(resp.success) {
-                        location.reload();
+                        location.href = resp.data.readirect;
                     }
                 })
             }, 'json');
