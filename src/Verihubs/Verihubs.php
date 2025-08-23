@@ -176,7 +176,7 @@ class Verihubs {
 
             $requestData = [
                 'msisdn' => $data['phone'],
-                'otp' => $data['otp']
+                'otp' => strval($data['otp'])
             ];
 
             $request = $this->request($endpoint, $requestData, $header);
