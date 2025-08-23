@@ -168,7 +168,7 @@ class Verihubs {
             }
 
             /** Send OTP */
-            $endpoint = ($credential['endpoint']."/v1/otp/send"); 
+            $endpoint = ($credential['endpoint']."/v2/otp/send"); 
             $header  = [
                 "API-Key: ".$credential['appKey'],
                 "App-ID: ".$credential['appID'],
@@ -273,7 +273,7 @@ class Verihubs {
             }
 
             /** Verify OTP */
-            $endpoint = ($credential['endpoint']."/v1/otp/verify"); 
+            $endpoint = ($credential['endpoint']."/v2/otp/verify"); 
             $header  = [
                 "API-Key: ".$credential['appKey'],
                 "App-ID: ".$credential['appID'],
