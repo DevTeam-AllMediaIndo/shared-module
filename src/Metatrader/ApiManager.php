@@ -9,7 +9,7 @@ class ApiManager {
     protected string $endpoint;
     protected string $tokenManager;
 
-    public function __construct(string $endpoint = "http://45.76.163.26:5000", string $tokenManager) {
+    public function __construct(string $tokenManager, string $endpoint = "http://45.76.163.26:5000") {
         $this->tokenManager = $tokenManager;
         $this->endpoint = $endpoint;
     }
