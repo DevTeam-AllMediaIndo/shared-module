@@ -6,11 +6,12 @@ define("CHANGE_INVESTOR_PASSWORD", 1);
 
 class ApiManager {
 
-    protected string $endpoint = "http://45.76.163.26:5000";
+    protected string $endpoint;
     protected string $tokenManager;
 
-    public function __construct(string $tokenManager) {
+    public function __construct(string $endpoint = "http://45.76.163.26:5000", string $tokenManager) {
         $this->tokenManager = $tokenManager;
+        $this->endpoint = $endpoint;
     }
 
     public function request(string $command, array $data = []) {
