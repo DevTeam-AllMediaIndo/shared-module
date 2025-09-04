@@ -77,6 +77,10 @@ class ApiManager {
         }
 
         $data['id'] = $this->tokenManager;
+        $data['master_pass'] = base64_encode($data['master_pass']);
+        $data['investor_pass'] = base64_encode($data['investor_pass']);
+        $data['fullname'] = base64_encode($data['fullname']);
+        $data['email'] = base64_encode($data['email']);
         $request = $this->request("AccountCreate", $data);
         if(!$request->success) {
             return 0;
