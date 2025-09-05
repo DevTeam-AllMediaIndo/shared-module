@@ -146,4 +146,27 @@ class ApiManager {
         ];
     }
 
+    public function accountBulk(array $data): object|int {
+        $required = ["logins"];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return -1;
+            }
+        }
+
+        $data['id'] = $this->tokenManager;
+        $request = $this->request("AccountBulk", $data);
+        if(!$request->success) {
+            return 0;
+        }
+
+        return (object) [
+            'success' => true,
+            'message' => "Success",
+            'data' => [
+                'password' => $request->message
+            ]
+        ];
+    }
+
 }
