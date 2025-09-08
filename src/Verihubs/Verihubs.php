@@ -377,6 +377,7 @@ class Verihubs {
                 /** Logging */
                 $this->logger($data['mbrid'], [
                     'endpoint' => $endpoint,
+                    'account_id' => $data['account_id'],
                     'module' => "/data-verification/certificate-electronic/verify",
                     'message' => $message,
                     'data' => $data,
@@ -394,6 +395,7 @@ class Verihubs {
             /** Logging */
             $this->logger($data['mbrid'], [
                 'endpoint' => $endpoint,
+                'account_id' => $data['account_id'],
                 'module' => "/data-verification/certificate-electronic/verify",
                 'message' => $request['message'],
                 'data' => $data,
@@ -424,16 +426,6 @@ class Verihubs {
                     'data'      => [],
                 ];
             }
-
-            /** Logging */
-            $this->logger($data['mbrid'], [
-                'endpoint' => $endpoint,
-                'module' => "/data-verification/certificate-electronic/verify",
-                'message' => $request['message'],
-                'data' => $data,
-                'response' => $request,
-                'code' => $request['code']
-            ]); 
 
             return $request;
 
