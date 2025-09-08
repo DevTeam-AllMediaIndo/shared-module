@@ -374,6 +374,16 @@ class Verihubs {
                     $message = $errorFields;
                 }
                 
+                /** Logging */
+                $this->logger($data['mbrid'], [
+                    'endpoint' => $endpoint,
+                    'module' => "/data-verification/certificate-electronic/verify",
+                    'message' => $message,
+                    'data' => $data,
+                    'response' => $request,
+                    'code' => $request['code']
+                ]); 
+                
                 return [
                     'success'   => false,
                     'message'   => "{$message}",
