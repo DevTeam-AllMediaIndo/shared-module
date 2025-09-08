@@ -624,6 +624,7 @@ class Verihubs {
         try {
             $this->db->insert("tb_log_verihub", [
                 'LOGVER_MBR' => $mbrid,
+                'LOGVER_ACC' => ($data['account_id'] ?? NULL),
                 'LOGVER_ENDPOINT' => $data['endpoint'] ?? "-",
                 'LOGVER_MODULE' => $data['module'] ?? "-",
                 'LOGVER_MESSAGE' => $data['message'] ?? "-",
