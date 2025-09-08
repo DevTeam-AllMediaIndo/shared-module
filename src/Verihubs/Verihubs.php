@@ -381,6 +381,16 @@ class Verihubs {
                 ];
             }
 
+            /** Logging */
+            $this->logger($data['mbrid'], [
+                'endpoint' => $endpoint,
+                'module' => "/data-verification/certificate-electronic/verify",
+                'message' => $request['message'],
+                'data' => $data,
+                'response' => $request,
+                'code' => $request['code']
+            ]); 
+
             if(empty($request['data'])) {
                 return [
                     'success'   => false,
