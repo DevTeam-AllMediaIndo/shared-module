@@ -72,7 +72,7 @@ class ApiTerminal {
 
         $apiData = [
             'mtlogin' => $data['login'],
-            'mtPassw' => trim(base64_encode($data['password']), "="),
+            'mtPassw' => trim(base64_encode($data['password'])),
             'mtServr' => $this->server
         ];
 
