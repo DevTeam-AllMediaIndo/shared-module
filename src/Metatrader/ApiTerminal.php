@@ -6,10 +6,11 @@ use Exception;
 
 class ApiTerminal {
 
-    protected string $endpoint = "http://45.76.163.26:5001";
+    protected string $endpoint;
     protected string $server;
 
-    public function __construct(string $server) {
+    public function __construct(string $server, string $endpoint = "http://45.76.163.26:5001") {
+        $this->endpoint = $endpoint;
         $this->server = $server;
     }
 
