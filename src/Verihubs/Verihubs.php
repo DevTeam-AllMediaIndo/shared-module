@@ -374,12 +374,34 @@ class Verihubs {
                     $message = $errorFields;
                 }
                 
+                /** Logging */
+                $this->logger($data['mbrid'], [
+                    'endpoint' => $endpoint,
+                    'account_id' => $data['account_id'],
+                    'module' => "/data-verification/certificate-electronic/verify",
+                    'message' => $message,
+                    'data' => $data,
+                    'response' => $request,
+                    'code' => $request['code']
+                ]); 
+                
                 return [
                     'success'   => false,
                     'message'   => "{$message}",
                     'data'      => [],
                 ];
             }
+
+            /** Logging */
+            $this->logger($data['mbrid'], [
+                'endpoint' => $endpoint,
+                'account_id' => $data['account_id'],
+                'module' => "/data-verification/certificate-electronic/verify",
+                'message' => $request['message'],
+                'data' => $data,
+                'response' => $request,
+                'code' => $request['code']
+            ]); 
 
             if(empty($request['data'])) {
                 return [
@@ -404,16 +426,6 @@ class Verihubs {
                     'data'      => [],
                 ];
             }
-
-            /** Logging */
-            $this->logger($data['mbrid'], [
-                'endpoint' => $endpoint,
-                'module' => "/data-verification/certificate-electronic/verify",
-                'message' => $request['message'],
-                'data' => $data,
-                'response' => $request,
-                'code' => $request['code']
-            ]); 
 
             return $request;
 
@@ -624,6 +636,7 @@ class Verihubs {
         try {
             $this->db->insert("tb_log_verihub", [
                 'LOGVER_MBR' => $mbrid,
+                'LOGVER_ACC' => ($data['account_id'] ?? NULL),
                 'LOGVER_ENDPOINT' => $data['endpoint'] ?? "-",
                 'LOGVER_MODULE' => $data['module'] ?? "-",
                 'LOGVER_MESSAGE' => $data['message'] ?? "-",
