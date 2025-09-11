@@ -268,7 +268,7 @@ class ApiTerminal {
         }
     }
 
-    public function orderClose(array $data) {
+    public function orderClose(array $data): object {
         try {
             $required = ['id', 'ticket'];
             foreach($required as $req) {
@@ -348,6 +348,45 @@ class ApiTerminal {
                 'success' => true,
                 'message' => "Successfull",
                 'data' => $accountSummary->message
+            ];
+
+        } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'message' => (SystemInfo::isDevelopment())? $e->getMessage() : "Internal Server Error",
+                'data' => []
+            ];
+        }
+    }
+
+    public function openedOrders(array $data) {
+        try {
+            $required = ["id"];
+            foreach($required as $req) {
+                if(empty($data[ $req ])) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "{$req} is required",
+                        'data' => []
+                    ];
+                }
+            }
+
+            $openedOrders = $this->request("OpenedOrders", ['id' => $data['id']]);
+            if(!is_object($openedOrders) && property_exists($openedOrders, "status")) {
+                if ($openedOrders->status != "success") {
+                    return (object) [
+                        'success' => false,
+                        'message' => $openedOrders->message ?? "Invalid data",
+                        'data' => []
+                    ];
+                }
+            }
+
+            return (object) [
+                'success' => true,
+                'message' => "Berhasil",
+                'data' => $openedOrders->message
             ];
 
         } catch (Exception $e) {
