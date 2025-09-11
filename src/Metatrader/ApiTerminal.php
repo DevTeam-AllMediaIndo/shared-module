@@ -397,4 +397,49 @@ class ApiTerminal {
             ];
         }
     }
+
+    public function historyOrders(array $data): object {
+        try {
+            $required = ["id", "from", "to"];
+            foreach($required as $req) {
+                if(empty($data[ $req ])) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "{$req} is required",
+                        'data' => []
+                    ];
+                }
+            }
+
+            $requestData = [
+                'id' => $data['id'],
+                'date_From' => date("Y-m-d", strtotime($data['from'])),
+                'date_To' => date("Y-m-d", strtotime($data['to'])),
+            ];
+
+            $openedOrders = $this->request("OpenedOrders", $requestData);
+            if(!is_object($openedOrders) && property_exists($openedOrders, "status")) {
+                if ($openedOrders->status != "success") {
+                    return (object) [
+                        'success' => false,
+                        'message' => $openedOrders->message ?? "Invalid data",
+                        'data' => []
+                    ];
+                }
+            }
+
+            return (object) [
+                'success' => true,
+                'message' => "Berhasil",
+                'data' => $openedOrders->message
+            ];
+
+        } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'message' => (SystemInfo::isDevelopment())? $e->getMessage() : "Internal Server Error",
+                'data' => []
+            ];
+        }
+    }
 }
