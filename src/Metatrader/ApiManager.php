@@ -163,9 +163,7 @@ class ApiManager {
         return (object) [
             'success' => true,
             'message' => "Success",
-            'data' => [
-                'password' => $request->message
-            ]
+            'data' => $request->message
         ];
     }
 
