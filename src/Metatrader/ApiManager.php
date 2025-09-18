@@ -167,4 +167,48 @@ class ApiManager {
         ];
     }
 
+    public function orderHistory(array $data): object|int {
+        $required = ["login", "from", "to"];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return -1;
+            }
+        }
+
+        $data['id'] = $this->tokenManager;
+        $requestData = [
+            'id' => $data['id'],
+            'login' => $data['login'],
+            'date_From' => date('Y-m-d', strtotime($data['from'])),
+            'date_To' => date('Y-m-d', strtotime($data['to']))
+        ];
+
+        $request = $this->request('HistoryRequest', $requestData);
+        if(is_object($request) || !property_exists($request, "success")) {
+            return 0;
+        }
+
+        if(!$request->success) {
+            return (object) [
+                'success' => false,
+                'message' => $request->message,
+                'data' => []
+            ];
+        }
+
+        if(!is_array($request->message)) {
+            return (object) [
+                'success' => false,
+                'message' => $request->message,
+                'data' => []
+            ];
+        }
+
+        return (object) [
+            'success' => true,
+            'message' => "HistoryRequest",
+            'data' => $request->message
+        ];
+    }
+
 }
