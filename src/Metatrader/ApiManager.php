@@ -184,7 +184,7 @@ class ApiManager {
         ];
 
         $request = $this->request('HistoryRequest', $requestData);
-        if(is_object($request) || !property_exists($request, "success")) {
+        if(!is_object($request) || !property_exists($request, "success")) {
             return 0;
         }
 
