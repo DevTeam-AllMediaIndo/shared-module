@@ -211,4 +211,28 @@ class ApiManager {
         ];
     }
 
+    public function credit(array $data): object|int {
+        $required = ["login", "amount", "comment"];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return -1;
+            }
+        }
+
+        if(is_numeric($data['login']) === FALSE && $data['login'] <= 0) {
+            return -1;
+        }
+
+        if(is_numeric($data['amount']) === FALSE && $data['amount'] <= 0) {
+            return -1;
+        }
+
+        $data['id'] = $this->tokenManager;
+        $request = $this->request("Credit", $data);
+        if(!$request->success) {
+            return 0;
+        }     
+
+        return $request->message;
+    }
 }
