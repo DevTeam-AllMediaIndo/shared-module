@@ -6,3 +6,8 @@ Fast setup website with shared-module
 ```bash
 composer require allmedia/shared-module:dev-main
 ```
+
+## Update Command
+```bash
+composer update allmedia/shared-module:dev-main
+```
