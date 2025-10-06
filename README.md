@@ -6,5 +6,3 @@ Fast setup website with shared-module
 ```bash
 composer require allmedia/shared-module:dev-main
 ```
-
-test webhook
