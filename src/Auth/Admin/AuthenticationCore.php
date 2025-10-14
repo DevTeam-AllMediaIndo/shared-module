@@ -67,8 +67,8 @@ class AuthenticationCore extends AuthenticationConfig implements AuthenticationI
 
     public function logout(): bool {
         global $_SESSION, $_COOKIE;
-        $_SESSION[ self::$sessionAuthName ] = "";
-        $_COOKIE[ self::$sessionAuthName ] = "";
+        $_SESSION[ $this->sessionAuthName ] = "";
+        $_COOKIE[ $this->sessionAuthName ] = "";
 
         session_destroy();
         setcookie( $this->sessionAuthName,"", time());
