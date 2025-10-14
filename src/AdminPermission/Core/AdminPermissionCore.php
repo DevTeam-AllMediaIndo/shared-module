@@ -228,6 +228,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                         $regex = "#^" . $pattern2 . "$#";
 
                         if(preg_match($regex, $requestUri)) {
+                            $perm['min_level'] = $module['id'];
                             $perm['module_id'] = $module['id'];
                             $perm['fileurl'] = str_replace("/^[a-zA-Z0-9\-]+$/", "", $pattern1);
                             $permission = $perm;
