@@ -148,6 +148,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                     'group' => strtolower($module['group']),
                     'type'  => $module['type'],
                     'icon'  => $module['icon'],
+                    'min_level' => $module['min_level'],
                     'modules' => []
                 ];
 
