@@ -132,6 +132,7 @@ class ApiManager {
         }
 
         $data['id'] = $this->tokenManager;
+        $data['password'] = rtrim(base64_encode($data['password']), "=");
         $request = $this->request("ChangePassword", $data);
         if(!$request->success) {
             return 0;
