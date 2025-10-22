@@ -1,6 +1,6 @@
 # Shared Module
 
-Fast setup website with shared-module
+Fast setup website with shared-module.
 
 ## Install
 ```bash
