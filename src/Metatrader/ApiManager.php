@@ -1,6 +1,8 @@
 <?php
 namespace Allmedia\Shared\Metatrader;
 
+use Exception;
+
 define("CHANGE_MASTER_PASSWORD", 0);
 define("CHANGE_INVESTOR_PASSWORD", 1);
 
@@ -235,5 +237,35 @@ class ApiManager {
         }     
 
         return $request->message;
+    }
+
+    public function openedOrders(array $data) {
+        $required = ["id"];
+        foreach($required as $req) {
+            if(empty($data[ $req ])) {
+                return (object) [
+                    'success' => false,
+                    'message' => "{$req} is required",
+                    'data' => []
+                ];
+            }
+        }
+
+        $openedOrders = $this->request("OpenedOrders", ['id' => $data['id']]);
+        if(!is_object($openedOrders) && property_exists($openedOrders, "status")) {
+            if ($openedOrders->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $openedOrders->message ?? "Invalid data",
+                    'data' => []
+                ];
+            }
+        }
+
+        return (object) [
+            'success' => true,
+            'message' => "Berhasil",
+            'data' => $openedOrders->message
+        ];
     }
 }
