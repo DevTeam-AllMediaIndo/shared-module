@@ -71,7 +71,7 @@ class ApiManager {
     }
 
     public function createAccount(array $data): object|int {
-        $required = ["master_pass", "investor_pass", "group", "fullname", "email", "leverage", "comment"];
+        $required = ["login", "master_pass", "investor_pass", "group", "fullname", "email", "leverage", "comment"];
         foreach($required as $req) {
             if(empty($data[ $req ])) {
                 return -1;
