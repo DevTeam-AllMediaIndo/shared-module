@@ -240,7 +240,7 @@ class ApiManager {
     }
 
     public function openedOrders(array $data) {
-        $required = ["id"];
+        $required = ["login"];
         foreach($required as $req) {
             if(empty($data[ $req ])) {
                 return (object) [
@@ -251,7 +251,8 @@ class ApiManager {
             }
         }
 
-        $openedOrders = $this->request("OpenedOrders", ['id' => $data['id']]);
+        $data['id'] = $this->tokenManager;
+        $openedOrders = $this->request("OpenedOrders", $data);
         if(!is_object($openedOrders) && property_exists($openedOrders, "status")) {
             if ($openedOrders->status != "success") {
                 return (object) [
