@@ -239,7 +239,7 @@ class ApiManager {
         return $request->message;
     }
 
-    public function openedOrders(array $data) {
+    public function openedOrders(array $data): object {
         $required = ["login"];
         foreach($required as $req) {
             if(empty($data[ $req ])) {
