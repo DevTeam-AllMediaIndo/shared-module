@@ -108,6 +108,7 @@ class ApiManager {
         }
 
         $data['id'] = $this->tokenManager;
+        $data['comment'] = rtrim(base64_encode($data['comment']), "=");
         $request = $this->request("Deposit", $data);
         if(!$request->success) {
             return 0;
