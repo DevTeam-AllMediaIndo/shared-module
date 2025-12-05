@@ -442,4 +442,89 @@ class ApiTerminal {
             ];
         }
     }
+
+    public function orderModify(array $data): object {
+        try {
+            $required = ['id', 'ticket'];
+            foreach($required as $req) {
+                if(empty($data[ $req ])) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid {$req}",
+                        'data' => []
+                    ];
+                }
+            }
+
+            /** stopLoss Validation */
+            $stopLoss = $data['sl'] ?? null;
+            if(empty($stopLoss) || is_numeric($stopLoss) === FALSE || $stopLoss < 0) {
+                return (object) [
+                    'success' => false,
+                    'message' => "invalid SL: {$stopLoss}",
+                    'data' => []
+                ];
+            }
+
+            /** take profit validation */
+            $takeProfit = $data['tp'] ?? null;
+            if(empty($takeProfit) || is_numeric($takeProfit) === FALSE || $takeProfit < 0) {
+                return (object) [
+                    'success' => false,
+                    'message' => "invalid TP: {$takeProfit}",
+                    'data' => []
+                ];
+            }
+
+            /** isPending */
+            $isPendingTransaction = $data['is_pending'] ?? 0;
+            if(!in_array($isPendingTransaction, [0,1])) {
+                return (object) [
+                    'success' => false,
+                    'message' => "Invalid is_pending value: {$isPendingTransaction}",
+                    'data' => []
+                ];
+            }
+
+            $modifyData = [
+                'id' => $data['id'],
+                'ticket' => $data['ticket'],
+                'sl' => $stopLoss,
+                'tp' => $takeProfit,
+                'pending' => $isPendingTransaction
+            ];
+
+            /** Order Modify */
+            $orderModify = $this->request("OrderModify", $modifyData);
+            if(!is_object($orderModify) || !property_exists($orderModify, "status")) {
+                return (object) [
+                    'success' => false,
+                    'message' => $orderModify->message ?? "Invalid Response",
+                    'data' => []
+                ];
+            }
+
+            $ticket = $orderModify->message->ticket ?? false;
+            if(!$ticket) {
+                return (object) [
+                    'success' => false,
+                    'message' => "Invalid Ticket",
+                    'data' => []
+                ];
+            }
+
+            return (object) [
+                'success' => true,
+                'message' => "Berhasil",
+                'data' => $orderModify->message
+            ];
+
+        } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'message' => (SystemInfo::isDevelopment())? $e->getMessage() : "Internal Server Error",
+                'data' => []
+            ];
+        }
+    }
 }
