@@ -8,6 +8,6 @@
         }
     },
     "require": {
-        "aws/aws-sdk-php": "^3.349"
+        "aws/aws-sdk-php": "^3.257"
     }
 }
