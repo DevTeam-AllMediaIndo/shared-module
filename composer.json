@@ -7,5 +7,7 @@
             "Allmedia\\Shared\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "aws/aws-sdk-php": "^3.349"
+    }
 }
