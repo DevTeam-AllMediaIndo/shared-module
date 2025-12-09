@@ -131,7 +131,7 @@ class FileUpload
         return rtrim($base, '/') . '/' . ltrim($filename, '/');
     }
 
-    public function upload_single_file(array $files, string $file_prefix = "upload", bool $compress = false, int $quality = 25) {
+    public function upload_single(array $files, string $file_prefix = "upload", bool $compress = false, int $quality = 25) {
         try {
             if(empty($files) || $files['error'] != 0) {
                 return $error_messages[ $files['error'] ] ?? "[ERROR] Upload file gagal";
