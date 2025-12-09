@@ -12,7 +12,7 @@ use Exception;
 /**
  * Simple FileUpload helper that builds S3 URLs and holds upload config.
  */
-class FileUpload
+class UploadAWS
 {
     private const DEFAULT_CURL_URL = 'https://upload-aws.techcrm.net/api/upload';
 
