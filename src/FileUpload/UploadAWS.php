@@ -5,10 +5,6 @@ use Aws\S3\Exception\S3Exception;
 use CURLFile;
 use Exception;
 
-// if (!class_exists('Aws\\S3\\S3Client')) {
-//     require_once __DIR__ . '/vendor/autoload.php';
-// }
-
 /**
  * Simple FileUpload helper that builds S3 URLs and holds upload config.
  */
@@ -16,12 +12,20 @@ class UploadAWS
 {
     private const DEFAULT_CURL_URL = 'https://upload-aws.techcrm.net/api/upload';
 
-    private string $curlUrl;
-    private string $region = '';
-    private string $bucket = '';
-    private string $folder = '';
+    /** @var string $curlUrl */
+    private $curlUrl;
 
-    public array $error_messages = [
+    /** @var string $region */
+    private $region = '';
+
+    /** @var string $bucket */
+    private $bucket = '';
+
+    /** @var string $folder */
+    private $folder = '';
+
+    /** @var array $error_messages */
+    public $error_messages = [
         UPLOAD_ERR_OK => 'There is no error, the file uploaded with success',
         UPLOAD_ERR_INI_SIZE => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
