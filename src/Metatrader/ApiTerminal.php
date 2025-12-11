@@ -466,7 +466,7 @@ class ApiTerminal {
 
             /** stopLoss Validation */
             $stopLoss = $data['sl'] ?? null;
-            if(empty($stopLoss) || is_numeric($stopLoss) === FALSE || $stopLoss < 0) {
+            if(is_numeric($stopLoss) === FALSE || $stopLoss < 0) {
                 return (object) [
                     'success' => false,
                     'message' => "invalid SL: {$stopLoss}",
@@ -476,7 +476,7 @@ class ApiTerminal {
 
             /** take profit validation */
             $takeProfit = $data['tp'] ?? null;
-            if(empty($takeProfit) || is_numeric($takeProfit) === FALSE || $takeProfit < 0) {
+            if(is_numeric($takeProfit) === FALSE || $takeProfit < 0) {
                 return (object) [
                     'success' => false,
                     'message' => "invalid TP: {$takeProfit}",
