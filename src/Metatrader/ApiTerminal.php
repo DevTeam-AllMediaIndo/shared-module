@@ -336,7 +336,15 @@ class ApiTerminal {
             }
 
             $accountSummary = $this->request("AccountSummary", ['id' => $data['id']]);
-            if(!is_object($accountSummary) || $accountSummary->status != "success") {
+            if(!is_object($accountSummary) || !property_exists($accountSummary, "status")) {
+                return (object) [
+                    'success' => false,
+                    'message' => "Invalid Message",
+                    'data' => []
+                ];
+            }
+
+            if($accountSummary->status !== "success") {
                 return (object) [
                     'success' => false,
                     'message' => $accountSummary->message ?? "Invalid Object",
