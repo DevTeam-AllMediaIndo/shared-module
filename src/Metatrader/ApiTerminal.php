@@ -541,11 +541,11 @@ class ApiTerminal {
                 'ticket' => $data['ticket'],
                 'sl' => $data['sl'],
                 'tp' => $data['tp'],
-                'pending' => $isPendingTransaction == 1 ? 'true' : 'false'
             ];
 
             /** Order Modify */
-            $orderModify = $this->request("OrderModify", $modifyData);
+            $endpointUrl = ($isPendingTransaction == 1) ? "OrderPlaceModify" : "OrderModify";
+            $orderModify = $this->request($endpointUrl, $modifyData);
             if(!is_object($orderModify) || !property_exists($orderModify, "status")) {
                 return (object) [
                     'success' => false,
