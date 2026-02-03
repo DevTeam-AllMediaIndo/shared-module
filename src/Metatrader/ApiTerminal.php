@@ -193,7 +193,7 @@ class ApiTerminal {
             }
 
             /** Validasi Operation */
-            if(!in_array($data['operation'], [ApiVariable::$operationBuy, ApiVariable::$operationSell])) {
+            if(!in_array($data['operation'], ApiVariable::operations())) {
                 return (object) [
                     'success' => false,
                     'message' => "invalid operation: " . $data['operation'],
@@ -223,7 +223,11 @@ class ApiTerminal {
                 }
             }
 
-            /** Price (opsional) */
+            /** 
+             * Price
+             * Opsional saat operation buy / sell
+             * Required saat operation buylimit, selllimit, buystop, sellstop
+             * */
             if(isset($data['price']) && $data['price'] !== '') {
                 if(is_numeric($data['price']) === FALSE || $data['price'] < 0) {
                     return (object) [
@@ -234,8 +238,19 @@ class ApiTerminal {
                 }
             }
 
+            if(in_array($data['operation'], [ApiVariable::$operationBuyLimit, ApiVariable::$operationSellLimit, ApiVariable::$operationBuyStop, ApiVariable::$operationSellStop])) {
+                if($data['price'] <= 0) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "Price is required for pending order",
+                        'data' => []
+                    ];
+                }
+            }
+
             /** Order Send */
-            $orderSend = $this->request("OrderSend", $data);
+            $orderEndpoint = in_array($data['operation'], [ApiVariable::$operationBuy, ApiVariable::$operationSell]) ? "OrderSend" : "OrderPlace";
+            $orderSend = $this->request($orderEndpoint, $data);
             if(!is_object($orderSend) || !property_exists($orderSend, "status")) {
                 return (object) [
                     'success' => false,
@@ -544,110 +559,5 @@ class ApiTerminal {
             ];
         }
     }
-
-    public function orderPlace(array $data): object {
-        try {
-            $required = ['id', 'symbol', 'operation', 'volume', 'price'];
-            foreach($required as $req) {
-                if(empty($data[ $req ])) {
-                    return (object) [
-                        'success' => false,
-                        'message' => "invalid {$req}",
-                        'data' => []
-                    ];
-                }
-            }
-            
-            if(is_numeric($data['volume']) === FALSE || $data['volume'] <= 0) {
-                return (object) [
-                    'success' => false,
-                    'message' => "invalid volume: " . $data['volume'],
-                    'data' => []
-                ];
-            }
-
-            /** Validasi Operation */
-            if(!in_array($data['operation'], [ApiVariable::$operationBuyLimit, ApiVariable::$operationSellLimit, ApiVariable::$operationBuyStop, ApiVariable::$operationSellStop])) {
-                return (object) [
-                    'success' => false,
-                    'message' => "invalid operation: " . $data['operation'],
-                    'data' => []
-                ];
-            }
-
-            /** SL (opsional) */
-            if(isset($data['sl']) && $data['sl'] !== '') {
-                if(is_numeric($data['sl']) === FALSE || $data['sl'] < 0) {
-                    return (object) [
-                        'success' => false,
-                        'message' => "invalid SL: " . $data['sl'],
-                        'data' => []
-                    ];
-                }
-            }
-
-            /** TP (opsional) */
-            if(isset($data['tp']) && $data['tp'] !== '') {
-                if(is_numeric($data['tp']) === FALSE || $data['tp'] < 0) {
-                    return (object) [
-                        'success' => false,
-                        'message' => "invalid TP: " . $data['tp'],
-                        'data' => []
-                    ];
-                }
-            }
-
-            /** Price (opsional) */
-            if(isset($data['price']) && $data['price'] !== '') {
-                if(is_numeric($data['price']) === FALSE || $data['price'] < 0) {
-                    return (object) [
-                        'success' => false,
-                        'message' => "invalid Price: " . $data['price'],
-                        'data' => []
-                    ];
-                }
-            }
-
-            /** Order Place */
-            $orderPlace = $this->request("OrderPlace", $data);
-            if(!is_object($orderPlace) || !property_exists($orderPlace, "status")) {
-                return (object) [
-                    'success' => false,
-                    'message' => $orderPlace->message ?? "Invalid Response",
-                    'data' => []
-                ];
-            }
-            
-            if($orderPlace->status != "success") {
-                return (object) [
-                    'success' => false,
-                    'message' => $orderPlace->message ?? "Order Place Failed",
-                    'data' => []
-                ];
-            }
-
-            $ticket = $orderPlace->message->ticket ?? false;
-            if(!$ticket) {
-                return (object) [
-                    'success' => false,
-                    'message' => "Invalid Ticket",
-                    'data' => []
-                ];
-            }
-
-            return (object) [
-                'success' => true,
-                'message' => "Berhasil",
-                'data' => $orderPlace->message
-            ];
-            
-            
-        } catch (Exception $e) {
-            return (object) [
-                'success' => false,
-                'message' => "Internal Server Error (500)",
-                'data' => []
-            ];
-        }
-    }
+   
 }
