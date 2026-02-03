@@ -554,6 +554,14 @@ class ApiTerminal {
                 ];
             }
 
+            if($orderModify->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $orderModify->message ?? "Order Modify Failed",
+                    'data' => []
+                ];
+            }
+
             $ticket = $orderModify->message->ticket ?? false;
             if(!$ticket) {
                 return (object) [
