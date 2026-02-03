@@ -305,18 +305,34 @@ class ApiTerminal {
                 }
             }
 
-            $data['placed'] ??= "false"; 
+            $isPendingOrder = $data['is_pending'] ?? 0;
+            if(!in_array($isPendingOrder, [0,1])) {
+                return (object) [
+                    'success' => false,
+                    'message' => "Invalid is_pending value: {$isPendingOrder}",
+                    'data' => []
+                ];
+            }
+
             $closeConfig = [
                 'id' => $data['id'],
                 'id_ticket' => $data['ticket']
             ];
 
-            $method = ($data['placed'] == "true") ? "OrderPlaceClose" : "OrderClose";
+            $method = ($isPendingOrder) ? "OrderPlaceClose" : "OrderClose";
             $orderClose = $this->request($method, $closeConfig);
             if(!is_object($orderClose) || !property_exists($orderClose, "status")) {
                 return (object) [
                     'success' => false,
                     'message' => $orderSend->message ?? "Invalid Response",
+                    'data' => []
+                ];
+            }
+
+            if($orderClose->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $orderClose->message ?? "Order Close Failed",
                     'data' => []
                 ];
             }
@@ -489,23 +505,25 @@ class ApiTerminal {
             }
 
             /** stopLoss Validation */
-            $stopLoss = $data['sl'] ?? null;
-            if(is_numeric($stopLoss) === FALSE || $stopLoss < 0) {
-                return (object) [
-                    'success' => false,
-                    'message' => "invalid SL: {$stopLoss}",
-                    'data' => []
-                ];
+            if(isset($data['sl']) && $data['sl'] !== '') {
+                if(is_numeric($data['sl']) === FALSE || $data['sl'] < 0) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid SL: " . $data['sl'],
+                        'data' => []
+                    ];
+                }
             }
 
             /** take profit validation */
-            $takeProfit = $data['tp'] ?? null;
-            if(is_numeric($takeProfit) === FALSE || $takeProfit < 0) {
-                return (object) [
-                    'success' => false,
-                    'message' => "invalid TP: {$takeProfit}",
-                    'data' => []
-                ];
+            if(isset($data['tp']) && $data['tp'] !== '') {
+                if(is_numeric($data['tp']) === FALSE || $data['tp'] < 0) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid TP: " . $data['tp'],
+                        'data' => []
+                    ];
+                }
             }
 
             /** isPending */
@@ -521,9 +539,9 @@ class ApiTerminal {
             $modifyData = [
                 'id' => $data['id'],
                 'ticket' => $data['ticket'],
-                'sl' => $stopLoss,
-                'tp' => $takeProfit,
-                'pending' => $isPendingTransaction
+                'sl' => $data['sl'],
+                'tp' => $data['tp'],
+                'pending' => $isPendingTransaction == 1 ? 'true' : 'false'
             ];
 
             /** Order Modify */
