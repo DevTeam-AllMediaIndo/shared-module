@@ -535,4 +535,101 @@ class ApiTerminal {
             ];
         }
     }
+
+    public function orderPlace(array $data): object {
+        try {
+            $required = ['id', 'symbol', 'operation', 'volume', 'price'];
+            foreach($required as $req) {
+                if(empty($data[ $req ])) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid {$req}",
+                        'data' => []
+                    ];
+                }
+            }
+            
+            if(is_numeric($data['volume']) === FALSE || $data['volume'] <= 0) {
+                return (object) [
+                    'success' => false,
+                    'message' => "invalid volume: " . $data['volume'],
+                    'data' => []
+                ];
+            }
+
+            $orderData = $data;
+            
+            /** SL (opsional) */
+            if(!empty($data['sl'])) {
+                if(is_numeric($data['sl']) === FALSE) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid SL: " . $data['sl'],
+                        'data' => []
+                    ];
+                }
+
+                $orderData['sl'] = $data['sl'];
+            }
+
+            /** TP (opsional) */
+            if(!empty($data['tp'])) {
+                if(is_numeric($data['tp']) === FALSE) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid TP: " . $data['tp'],
+                        'data' => []
+                    ];
+                }
+
+                $orderData['tp'] = $data['tp'];
+            }
+
+            /** Price (opsional) */
+            if(!empty($data['price'])) {
+                if(is_numeric($data['price']) === FALSE) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "invalid Price: " . $data['price'],
+                        'data' => []
+                    ];
+                }
+
+                $orderData['price'] = $data['price'];
+            }
+
+            /** Order Place */
+            $orderPlace = $this->request("OrderPlace", $orderData);
+            if(!is_object($orderPlace) || !property_exists($orderPlace, "status")) {
+                return (object) [
+                    'success' => false,
+                    'message' => $orderPlace->message ?? "Invalid Response",
+                    'data' => []
+                ];
+            }
+
+            $ticket = $orderPlace->message->ticket ?? false;
+            if(!$ticket) {
+                return (object) [
+                    'success' => false,
+                    'message' => "Invalid Ticket",
+                    'data' => []
+                ];
+            }
+
+            return (object) [
+                'success' => true,
+                'message' => "Berhasil",
+                'data' => $orderPlace->message
+            ];
+            
+            
+        } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'message' => "Internal Server Error (500)",
+                'data' => []
+            ];
+        }
+    }
 }
