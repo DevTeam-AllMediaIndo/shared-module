@@ -244,6 +244,14 @@ class ApiTerminal {
                 ];
             }
 
+            if($orderSend->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $orderSend->message ?? "Order Place Failed",
+                    'data' => []
+                ];
+            }
+
             $ticket = $orderSend->message->ticket ?? false;
             if(!$ticket) {
                 return (object) [
@@ -606,6 +614,14 @@ class ApiTerminal {
                 return (object) [
                     'success' => false,
                     'message' => $orderPlace->message ?? "Invalid Response",
+                    'data' => []
+                ];
+            }
+            
+            if($orderPlace->status != "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $orderPlace->message ?? "Order Place Failed",
                     'data' => []
                 ];
             }
