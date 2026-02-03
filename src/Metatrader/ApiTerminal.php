@@ -586,4 +586,50 @@ class ApiTerminal {
         }
     }
    
+    public function openedPendingOrders(array $data): object {
+        try {
+            $required = ["id"];
+                if(empty($data[ $req ])) {
+                    return (object) [
+                        'success' => false,
+                        'message' => "{$req} is required",
+                        'data' => []
+                    ];
+                }
+            }
+
+            $openedPendingOrders = $this->request("OpenedPendingOrders", ['id' => $data['id']]);
+            if(!is_object($openedPendingOrders) && property_exists($openedPendingOrders, "status")) {
+                if ($openedPendingOrders->status != "success") {
+                    return (object) [
+                        'success' => false,
+                        'message' => $openedPendingOrders->message ?? "Invalid data",
+                        'data' => []
+                    ];
+                }
+            }
+
+            if($openedPendingOrders->status !== "success") {
+                return (object) [
+                    'success' => false,
+                    'message' => $openedPendingOrders->message ?? "Invalid Object",
+                    'data' => []
+                ];
+            }
+
+            return (object) [
+                'success' => true,
+                'message' => "Berhasil",
+                'data' => $openedPendingOrders->message
+            ];
+
+        } catch (Exception $e) {
+            return (object) [
+                'success' => false,
+                'message' => (SystemInfo::isDevelopment())? $e->getMessage() : "Internal Server Error",
+                'data' => []
+            ];
+        }
+    }
+    
 }
