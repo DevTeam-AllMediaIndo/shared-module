@@ -589,6 +589,7 @@ class ApiTerminal {
     public function openedPendingOrders(array $data): object {
         try {
             $required = ["id"];
+            foreach($required as $req) {
                 if(empty($data[ $req ])) {
                     return (object) [
                         'success' => false,
