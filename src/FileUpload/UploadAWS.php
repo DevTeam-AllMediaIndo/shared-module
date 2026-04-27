@@ -189,6 +189,53 @@ class UploadAWS
         }
     }
 
+    public function upload_pdf(array $files, string $file_prefix = "upload") {
+        try {
+            if(empty($files) || $files['error'] != 0) {
+                return $error_messages[ $files['error'] ] ?? "[ERROR] Upload file gagal";
+            }
+
+            /** file info */
+            $file_info = pathinfo($files['name']);
+
+            /** check if extension allowed */
+            $pdf_ext = ["application/pdf", "pdf"];
+            if(!in_array($files['type'], $pdf_ext) && !in_array($file_info['extension'], $pdf_ext)) {
+                return "[Invalid file type], Mohon upload file ".implode(", ", $pdf_ext);
+            }
+
+            /** Cek file size , max 5mb */
+            $file_size = $files["size"];
+            if(!$file_size || $file_size > (5 * 1024 * 1024)) {
+                return "[Invalid file size], Max ukuran file 5mb";
+            }
+
+            $mime = mime_content_type($files['tmp_name']);
+            if($mime === FALSE) {
+                return "Invalid File Type";
+            }
+
+            $upload = $this->upload(new CURLFile($files['tmp_name'], $mime, $files['name']));
+            if(!is_array($upload) || !array_key_exists("filename", $upload)) {
+                return $upload ?? "Failed to upload image";
+            }
+
+            $default = [
+                'size' => $files['size'],
+                'extension' => $file_info['extension'],
+                'mime' => $mime,
+            ];
+
+            return array_merge($default, $upload);
+
+        } catch (Exception $e) {
+            return $e->getMessage();
+            
+        } catch (S3Exception $s3) {
+            return $s3->getAwsErrorMessage();
+        }
+    }
+
     private function upload(CURLFile $file) {
         try {
             if(empty($this->folder)) {
