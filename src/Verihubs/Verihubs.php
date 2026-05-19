@@ -16,25 +16,26 @@ class Verihubs {
     }
     
 
-    public function phoneValidation(string $phoneCode, int $phone): bool|string|int {
-        $phone = preg_replace('/[^\d]/', '', $phone);
+    public function phoneValidation(string $phoneCode, string|int $phone): bool|string {
+        // Hilangkan phone code dan phone +
+        $normalizedCodePhone = ltrim((string) $phoneCode, '+');
 
-        /** JJika diawali 0, buang 0 dan tambahkan kode negara */
-        if (preg_match('/^0\d+$/', $phone)) {
-            $phone = $phoneCode . substr($phone, 1);
+        // Hilangkan semua karakter non-digit dari nomor telepon
+        $normalizedInputPhone = ltrim(preg_replace('/\D+/', '', (string) $phone), '0');
+        
+        // Jika nomor telepon diawali dengan kode negara, hilangkan kode negara tersebut
+        if(strpos($normalizedInputPhone, $normalizedCodePhone) === 0) {
+            $normalizedInputPhone = substr($normalizedInputPhone, strlen($normalizedCodePhone));
+            $normalizedInputPhone = ltrim($normalizedInputPhone, '0');
         }
-
-        /** Jika tidak diawali dengan + atau 0, langsung tambahkan kode negara */
-        elseif (!preg_match('/^' . preg_quote($phoneCode) . '/', $phone)) {
-            $phone = $phoneCode . $phone;
-        }
-
-        // Cek validitas format [kode][nomor minimal 9 digit]
-        if (strlen($phone) < 9) {
+        
+        // Jika nomor telepon setelah normalisasi kurang dari 9 digit, anggap tidak valid
+        if (strlen($normalizedInputPhone) < 9) {
             return false;
         }
-
-        return $phone;
+        
+        // Gabungkan kembali kode negara dengan nomor telepon yang sudah dinormalisasi
+        return '+' . $normalizedCodePhone . $normalizedInputPhone;
     }
     
     protected function getCredential(): array {
